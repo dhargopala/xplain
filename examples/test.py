@@ -1,6 +1,6 @@
 from xplain.executor import XPLAINMetricCalculator
 
-PROJECT_ID="gopalad-sandbox"
+PROJECT_ID="project-id"
 LOCATION="us-central1"
 LLM_MODEL_NAME="gemini-2.5-flash"
 EMBEDDER_MODEL_NAME="text-embedding-004"
