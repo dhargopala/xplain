@@ -13,7 +13,7 @@ For Embedding `VERTEX_AI` is the only implementation, which uses the text embedd
 ## Installation
 To install the package simply run: 
 ```sh
-pip install xplain
+pip install git+https://github.com/dhargopala/xplain.git
 ```
 
 ## Usage
