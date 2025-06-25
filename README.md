@@ -2,6 +2,7 @@
 
 ## Introduction
 ![XPLAIN architecture](assets/architecture.png?raw=true)
+
 We propose an approach that perturbs the prompt via masking words to generate several outputs through the LLM and then compares the outputs with the generated output of the unperturbed prompt through vector-based similarity at a semantic level. After this, the word level importance of each masked word in the perturbed sentences is mathematically derived and referred to as the XPLAIN metric.
 
 ## Instructions
