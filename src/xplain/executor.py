@@ -1,4 +1,5 @@
 import typing as t
+from tqdm import tqdm
 
 import concurrent.futures
 from sklearn.metrics.pairwise import cosine_similarity
@@ -46,31 +47,40 @@ class XPLAINMetricCalculator:
                                                         self.original_prompt_output)]
 
     def _compute_output_and_embeddings(self, sentence: str,
-                                       perturbations: t.List[str], max_workers:int
+                                       perturbations: t.List[str], max_workers: int
                                        ) -> t.Dict[str, t.Tuple[str, t.List[float]]]:
         generated_outputs = {}
         generated_embeddings = {}
 
-        with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as exec:
-            original_prompt_future = exec.submit(self._original_prompt_outputs, sentence) 
-            futures_perturbation_tuple = [(
-                prompt,exec.submit(self.llm.generate_text, prompt)
-                ) for prompt in perturbations]
-            
-        original_prompt_future.result()
+        with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+            original_prompt_future = executor.submit(self._original_prompt_outputs, sentence)
 
-        for perturbation, future in futures_perturbation_tuple:
-            result = future.result()
-            generated_outputs[perturbation] = result
+            future_to_perturbation = {
+                executor.submit(self.llm.generate_text, p): p for p in perturbations
+            }
 
-        with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as exec:
-            futures_output_tuple = [(
-                perturbation,output,exec.submit(self.embedder.generate_embeddings, output)
-                ) for perturbation, output in generated_outputs.items()]
+            for future in tqdm(concurrent.futures.as_completed(future_to_perturbation),
+                               total=len(perturbations),
+                               desc="Generating perturbed outputs"):
+                perturbation = future_to_perturbation[future]
+                generated_outputs[perturbation] = future.result()
+
+            original_prompt_future.result()
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+            valid_outputs = {p: o for p, o in generated_outputs.items() if o is not None}
             
-        for perturbation, output, future in futures_output_tuple:
-            embedding = future.result()
-            generated_embeddings[perturbation] = [output, embedding]
+            future_to_output = {
+                executor.submit(self.embedder.generate_embeddings, output): (pert, output)
+                for pert, output in valid_outputs.items()
+            }
+
+            for future in tqdm(concurrent.futures.as_completed(future_to_output),
+                               total=len(valid_outputs),
+                               desc="Generating embeddings for each output"):
+                perturbation, output = future_to_output[future]
+                embedding = future.result()
+                generated_embeddings[perturbation] = (output, embedding)
 
         return generated_embeddings
 
