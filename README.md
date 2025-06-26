@@ -10,6 +10,12 @@ This repository contains code to run generate the XPLAIN metric for a given inpu
 
 Currently models from the family of `VERTEX_AI` and `GOOGLE_AI_STUDIO` are supported for the LLMs, these include the latest Gemini models aswell.
 
+In order to use the `GOOGLE_AI_STUDIO` models please ensure that [API Key](https://aistudio.google.com/app/apikey) is set as an environment variable.
+
+```sh
+export GOOGLE_AI_STUDIO_API_KEY="YOUR_API_KEY"
+```
+
 For Embedding `VERTEX_AI` is the only implementation, which uses the text embedding models to generate the fixed sized embeddings.
 
 ## Installation

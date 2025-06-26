@@ -1,4 +1,5 @@
 import typing as t
+import os
 
 from google import genai
 from google.genai import types
@@ -21,7 +22,11 @@ class GoogleAIStudioLLM(BaseLLM):
             top_p: The model samples from the smallest set of 
                 tokens whose cumulative probability exceeds `top_p`.
         """
-        self.client = genai.Client(api_key='API_KEY')
+        
+        key = os.getenv("GOOGLE_AI_STUDIO_API_KEY")
+        if not key:
+            raise ValueError("'GOOGLE_AI_STUDIO_API_KEY' environment variable is not set.")
+        self.client = genai.Client(api_key=key)
         self.model = model_name
         self.output_tokens = output_tokens
         self.top_k = top_k
