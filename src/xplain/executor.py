@@ -64,7 +64,6 @@ class XPLAINMetricCalculator:
                                desc="Generating perturbed outputs"):
                 perturbation = future_to_perturbation[future]
                 generated_outputs[perturbation] = future.result()
-
             original_prompt_future.result()
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
