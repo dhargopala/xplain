@@ -1,6 +1,6 @@
 from xplain.executor import XPLAINMetricCalculator
 
-PROJECT_ID="project-id"
+PROJECT_ID="gopalad-sandbox"
 LOCATION="us-central1"
 LLM_MODEL_NAME="gemini-2.5-flash"
 EMBEDDER_MODEL_NAME="text-embedding-004"
@@ -26,9 +26,10 @@ xplain_calculator = XPLAINMetricCalculator()
 xplain_calculator.select_llm("VERTEX_AI", **llm_args)
 xplain_calculator.select_embedder("VERTEX_AI", **embedder_args)
 
-scores = xplain_calculator.compute_score("Why do we need sleep?")
+prompt = "Why do we need sleep?"
+scores = xplain_calculator.compute_score(prompt)
 
-print("XPLAIN Scores:")
+print(f"XPLAIN Scores for the prompt: '{prompt}' :")
 print("-" * 25)
 for word, score in scores:
   print(f"{word:<10} | Score: {score:.4f}")
