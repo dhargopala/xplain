@@ -69,3 +69,16 @@ xplain_calculator.select_embedder("VERTEX_AI", **embedder_args)
 
 scores = xplain_calculator.compute_score("Why do we need sleep?")
 ```
+
+Sample Output:
+
+```
+XPLAIN Scores for the prompt: 'Why do we need sleep?' :
+-------------------------
+Why        | Score: 0.1613
+do         | Score: 0.0188
+we         | Score: 0.0000
+need       | Score: 0.0785
+sleep?     | Score: 1.0000
+-------------------------
+```
