@@ -8,6 +8,7 @@ from sklearn.preprocessing import MinMaxScaler
 from xplain.llms.vertexai import VertexAILLMFactory
 from xplain.llms.google import GoogleAIStudioLLMFactory
 from xplain.embeddings.vertexai import VertexAIEmbedderFactory
+from xplain.embeddings.google import GoogleAIStudioEmbedderFactory
 
 llm_factory_mapping = {
         "VERTEX_AI": VertexAILLMFactory,
@@ -15,7 +16,8 @@ llm_factory_mapping = {
     }
 
 embedder_factory_mapping = {
-        "VERTEX_AI": VertexAIEmbedderFactory
+        "VERTEX_AI": VertexAIEmbedderFactory,
+        "GOOGLE_AI_STUDIO": GoogleAIStudioEmbedderFactory
     }
 
 class XPLAINMetricCalculator:

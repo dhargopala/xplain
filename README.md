@@ -9,15 +9,13 @@ We propose an approach that perturbs the prompt via masking words to generate se
 ## Instructions
 This repository contains code to run generate the XPLAIN metric for a given input prompt. 
 
-Currently models from the family of `VERTEX_AI` and `GOOGLE_AI_STUDIO` are supported for the LLMs, these include the latest Gemini models aswell.
+Currently models from the family of `VERTEX_AI` and `GOOGLE_AI_STUDIO` are supported for LLMs and the Embddeing Models, these include the latest Gemini models aswell.
 
 In order to use the `GOOGLE_AI_STUDIO` models please ensure that [API Key](https://aistudio.google.com/app/apikey) is set as an environment variable.
 
 ```sh
 export GOOGLE_AI_STUDIO_API_KEY="YOUR_API_KEY"
 ```
-
-For Embedding `VERTEX_AI` is the only implementation, which uses the text embedding models to generate the fixed sized embeddings.
 
 ## Installation
 To install the package simply run: 
@@ -27,25 +25,22 @@ pip install git+https://github.com/dhargopala/xplain.git
 
 ## Usage
 
-`examples/test.py` contains the code needed to generate the XPLAIN score for the input prompt.
+`examples/google.py` contains the code needed to generate the XPLAIN score for the input prompt.
+This examples utilizes Google AI Studio models.
 
 We first import the package and define the constants.
 
 ```python
 from xplain.executor import XPLAINMetricCalculator
 
-PROJECT_ID="project-id"
-LOCATION="us-central1"
 LLM_MODEL_NAME="gemini-2.5-flash"
-EMBEDDER_MODEL_NAME="text-embedding-004"
+EMBEDDER_MODEL_NAME="gemini-embedding-001"
 ```
 
 After setting the global values we define the LLM and Embedding model's arguments.
 
 ```python
 llm_args = {
-    "PROJECT_ID": PROJECT_ID,
-    "LOCATION": LOCATION,
     "MODEL_NAME": LLM_MODEL_NAME,
     "output_tokens": 65535,   
     "top_k": 40,
@@ -53,8 +48,6 @@ llm_args = {
     "temperature": 0
 }
 embedder_args = {
-    "PROJECT_ID": PROJECT_ID,
-    "LOCATION": LOCATION,
     "MODEL_NAME": EMBEDDER_MODEL_NAME
 }
 ```
@@ -65,8 +58,8 @@ After setting the relevant API arguments, the execution just requires a few line
 ```python
 xplain_calculator = XPLAINMetricCalculator()
 
-xplain_calculator.select_llm("VERTEX_AI", **llm_args)
-xplain_calculator.select_embedder("VERTEX_AI", **embedder_args)
+xplain_calculator.select_llm("GOOGLE_AI_STUDIO", **llm_args)
+xplain_calculator.select_embedder("GOOGLE_AI_STUDIO", **embedder_args)
 
 scores = xplain_calculator.compute_score("Why do we need sleep?")
 ```
